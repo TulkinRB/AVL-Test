@@ -17,10 +17,10 @@ MIN_KEY = 0
 MAX_KEY = 10000
 
 step_weights = {
-    "insert": (8, 25),
-    "delete": (8, 25),
-    "split": (0, 4),
-    "join": (1, 4),
+    "insert": (8, 30),
+    "delete": (8, 30),
+    "split": (2, 8),
+    "join": (3, 8),
 }
 
 RESULT_FILE_PATH = Path.home() / "avl_tester_results.json"

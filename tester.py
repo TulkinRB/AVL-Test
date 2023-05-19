@@ -380,12 +380,22 @@ class Test:
             assert size == 0, f"Incorrect size of virtual node: {size}"
             height = node.get_height()
             assert height == -1, f"Incorrect height of virtual node: {height}"
-            return -1, 0
+            return -1, 0, None, None
 
         key = node.get_key()
+        assert isinstance(key, int), f"Invalid key found: {key}. All keys used by the tester are integers"
 
-        height_left, size_left = self._validate_node(node.get_left())
-        height_right, size_right = self._validate_node(node.get_right())
+        height_left, size_left, min_left_key, max_left_key = self._validate_node(node.get_left())
+        height_right, size_right, min_right_key, max_right_key = self._validate_node(node.get_right())
+
+        min_key = max_key = key
+
+        if max_left_key is not None:
+            assert max_left_key < key, f"Invalid BST: Node {max_left_key} is in the left subtree of node {key}"
+            min_key = min_left_key
+        if min_right_key is not None:
+            assert min_right_key > key, f"Invalid BST: Node {min_right_key} is in the right subtree of node {key}"
+            max_key = max_right_key
 
         tester_balance_factor = height_left - height_right
         assert abs(tester_balance_factor) < 2, f"Balance factor (computed by tester) of node {key} is {tester_balance_factor}"
@@ -408,22 +418,17 @@ class Test:
         assert tester_size == avl_size, f"Incorrect size for node {key}: {avl_height}. Correct size is {tester_height}"
 
         left_key = node.get_left().get_key()
-        if left_key is not None:
-            assert left_key < key, f"Invalid BST: Node {left_key} is a left child of node {key}"
-        right_key = node.get_right().get_key()
-        if right_key is not None:
-            assert right_key > key, f"Invalid BST: Node {right_key} is a right child of node {key}"
-
         left_parent_key = getattr(node.get_left().get_parent(), "get_key", lambda: None)()
         assert node.get_left().get_parent() is node, (
             f"Left child ({left_key}) of node {key} has parent {left_parent_key}"
         )
+        right_key = node.get_right().get_key()
         right_parent_key = getattr(node.get_right().get_parent(), "get_key", lambda: None)()
         assert node.get_right().get_parent() is node, (
             f"Right child ({right_key}) of node {key} has parent {right_parent_key}"
         )
 
-        return tester_height, tester_size
+        return tester_height, tester_size, min_key, max_key
 
 
 if __name__ == '__main__':

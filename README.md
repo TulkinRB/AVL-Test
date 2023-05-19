@@ -16,6 +16,7 @@ pip install tqdm
   - If a test fails, an exception will be raised. The exception contains the steps used to produce the error. Above this exception
     (in the error output) you can see the actual exception raised - either by the avl tree code or by the tester's validators.
   - The next time the tester runs after a failure it will automatically pick the same test-case - so you can debug your code using the same inputs.
+- To run - simply execute `tester.py`
 
 ### Bulk testing
 - In bulk mode, failed tests will not stop the tester. Instead, the failures will be saved and reported after the run.

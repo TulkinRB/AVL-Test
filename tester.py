@@ -240,7 +240,7 @@ class Test:
                     maxleft = self.key_lists[prev_tree_with_keys][-1]
                     min_key = maxleft + diff
                     break
-                diff += 2
+                diff += 1
                 prev_tree_with_keys -= 1
 
             next_tree_with_keys = left_tree + 1
@@ -253,7 +253,7 @@ class Test:
                     minright = self.key_lists[next_tree_with_keys][0]
                     max_key = minright - diff
                     break
-                diff += 2
+                diff += 1
                 next_tree_with_keys += 1
 
             if min_key+1 > max_key-1:

@@ -415,7 +415,7 @@ class Test:
 
         tester_size = size_left + size_right + 1
         avl_size = node.get_size()
-        assert tester_size == avl_size, f"Incorrect size for node {key}: {avl_height}. Correct size is {tester_height}"
+        assert tester_size == avl_size, f"Incorrect size for node {key}: {avl_size}. Correct size is {tester_size}"
 
         left_key = node.get_left().get_key()
         left_parent_key = getattr(node.get_left().get_parent(), "get_key", lambda: None)()

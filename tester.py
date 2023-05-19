@@ -160,7 +160,7 @@ class Test:
     def _perform_insert(self, step):
         step_type, tree, key = step
         bisect.insort(self.key_lists[tree], key)
-        self.trees[tree].insert(key, "foobar")
+        self.trees[tree].insert(key, (key, "value"))
 
     def _perform_split(self, step):
         step_type, tree, key = step
@@ -183,14 +183,14 @@ class Test:
             llist.append(key)
             self.key_lists[tree] = llist + self.key_lists[tree]
             self.key_lists[tree].sort()
-            self.trees[tree].join(ltree, key, "foobar")
+            self.trees[tree].join(ltree, key, (key, "value"))
         else:
             rlist = self.key_lists.pop(tree + 1)
             rtree = self.trees.pop(tree + 1)
             self.key_lists[tree].append(key)
             self.key_lists[tree] += rlist
             self.key_lists[tree].sort()
-            self.trees[tree].join(rtree, key, "foobar")
+            self.trees[tree].join(rtree, key, (key, "value"))
 
     def _generate_step(self):
         sizes = [len(lst) for lst in self.key_lists]
@@ -334,7 +334,17 @@ class Test:
     def _check_inorder(self, tree_index):
         tree = self.trees[tree_index]
         key_list = self.key_lists[tree_index]
-        assert tree.avl_to_array() == key_list, "In-order (avl_to_array) result doesn't match the expected result"
+        expected_inorder = ((key, (key, "value")) for key in key_list)
+        received_inorder = tree.avl_to_array()
+        assert len(received_inorder) == len(key_list), (
+            f"In-order (avl_to_array) result length doesn't match expected value."
+            f"Expected value: {len(key_list)}. Actual value: {len(received_inorder)}"
+        )
+        assert all(
+            received_item == expected_item
+            for received_item, expected_item
+            in zip(received_inorder, expected_inorder)
+        ), "In-order (avl_to_array) result doesn't match the expected result"
 
     def _check_rank(self, tree_index):
         tree = self.trees[tree_index]
